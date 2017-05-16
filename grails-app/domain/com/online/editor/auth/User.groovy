@@ -12,7 +12,17 @@ class User implements Serializable {
 	private static final long serialVersionUID = 1
 
 	String username
+	String firstname
+	String lastname
+	String dob
+	String street
+	String city
+	String email
 	String password
+	String confirm_password
+	String gender
+
+
 	boolean enabled = true
 	boolean accountExpired
 	boolean accountLocked
@@ -23,11 +33,23 @@ class User implements Serializable {
 	}
 
 	static constraints = {
-		password blank: false, password: true
-		username blank: false, unique: true
+		password blank: false, password: true/*,matches:'((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})'*/
+		username  blank: false,validator: {uname,obj->
+			if(User.findByUsername(uname)){
+				return "User already exist"
+			}
+		}
+		firstname nullable: true
+		lastname nullable: true
+		email email:true,nullable: true
+		street nullable: true
+		city nullable:true
+		dob nullable: true
+		gender nullable: true
 	}
 
 	static mapping = {
 		password column: '`password`'
 	}
+	static transients = ['confirm_password']
 }
