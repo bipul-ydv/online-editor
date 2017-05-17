@@ -15,7 +15,7 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**/css/**',      access: ['permitAll']],
 	[pattern: '/**/images/**',   access: ['permitAll']],
 	[pattern: '/**/favicon.ico', access: ['permitAll']],
-	[pattern: '/**', access:["hasAllRole('ROLE_ADMIN','ROLE_USER')"]]
+	[pattern: '/**', access:[('hasAnyRole(\'ROLE_ADMIN\',\'ROLE_USER\')')]]
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [
@@ -26,4 +26,19 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 	[pattern: '/**/favicon.ico', filters: 'none'],
 	[pattern: '/**',             filters: 'JOINED_FILTERS']
 ]
+
+grails {
+	mail {
+		host = "smtp.gmail.com"
+		port = 465
+		username = "parulkhurana1996@gmail.com"
+		password = "forgotpassword123"
+		props = ["mail.smtp.auth":"true",
+				 "mail.smtp.socketFactory.port":"465",
+				 "mail.smtp.socketFactory.class":"javax.net.ssl.SSLSocketFactory",
+				 "mail.smtp.socketFactory.fallback":"false"]
+	}
+}
+
+
 

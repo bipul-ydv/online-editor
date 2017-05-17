@@ -21,7 +21,7 @@ class User implements Serializable {
 	String password
 	String confirm_password
 	String gender
-
+    String forgotPasswordUUID
 
 	boolean enabled = true
 	boolean accountExpired
@@ -34,11 +34,7 @@ class User implements Serializable {
 
 	static constraints = {
 		password blank: false, password: true/*,matches:'((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%]).{6,20})'*/
-		username  blank: false,validator: {uname,obj->
-			if(User.findByUsername(uname)){
-				return "User already exist"
-			}
-		}
+		username  blank: false,unique: true
 		firstname nullable: true
 		lastname nullable: true
 		email email:true,nullable: true
@@ -46,6 +42,7 @@ class User implements Serializable {
 		city nullable:true
 		dob nullable: true
 		gender nullable: true
+        forgotPasswordUUID nullable: true
 	}
 
 	static mapping = {
