@@ -24,39 +24,48 @@ class UserController {
         }
         String email = params.email
         User user = User.findByEmail(email)
+        if(!user){
+            flash.error = "Email Id Not Registered.Please Signup First"
+            redirect controller: 'login' , action: 'auth'
+            return
+        }
         String uuid = UUID.randomUUID().toString()
         user.forgotPasswordUUID = uuid
         utilityService.validateObjectAndSave("Problem in saving uuid in user", user)
         mailerService.sendForgotPasswordEmail(user)
         [email:email]
     }
+
     @Secured('IS_AUTHENTICATED_ANONYMOUSLY')
     def changePassword(){
+
         if(!params.uuid){
             flash.error = "${g.message(code: 'user.forgetPassword.linkExpired')}"
-            render(view:"forgotPassword")
+            redirect controller: 'login' , action: 'auth'
             return
         }
         User user = User.findByForgotPasswordUUID(params.uuid)
+
         if (!user) {
             flash.error = "${g.message(code: 'user.forgetPassword.linkExpired')}"
-            render(view:"forgotPassword")
+            redirect controller: 'login' , action: 'auth'
             return
         }
         [uuid: params.uuid]
 
     }
+
     @Secured('IS_AUTHENTICATED_ANONYMOUSLY')
     def saveNewPassword(){
         if(!params.uuid){
             flash.error = "${g.message(code: 'user.forgetPassword.linkExpired')}"
-            render(view:"forgotPassword")
+            redirect controller: 'login' , action: 'auth'
             return
         }
         User user = User.findByForgotPasswordUUID(params.uuid)
         if (!user) {
             flash.error = "${g.message(code: 'user.forgetPassword.linkExpired')}"
-            render(view:"forgotPassword")
+            redirect controller: 'login' , action: 'auth'
             return
         }
 
@@ -79,16 +88,18 @@ class UserController {
         user.password = params.password
         try {
             utilityService.validateObjectAndSave("Problem in saving new password.", user)
-            user.forgotPasswordUUID = " "
-            user.save(flush:true,failOnError:true)
+            user.forgotPasswordUUID = null
 //            utilityService.validateObjectAndSave('problem in saving forgot password uuid.', user)
+            user.save(flush:true,failOnError:true)
+
         }  catch (Throwable throwable) {
             log.error("Problem in saving the password." + throwable.message)
             flash.message = "Problem in saving the password." + throwable.message
             render(view: 'changePassword', model: [uuid: params.uuid])
             return
         }
-       render "you have successfully change your password"
+        flash.message = "You have successfully change your password"
+        redirect controller: 'login' , action: 'auth'
     }
 
 }
