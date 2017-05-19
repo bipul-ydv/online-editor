@@ -89,7 +89,6 @@ class UserController {
         try {
             utilityService.validateObjectAndSave("Problem in saving new password.", user)
             user.forgotPasswordUUID = null
-//            utilityService.validateObjectAndSave('problem in saving forgot password uuid.', user)
             user.save(flush:true,failOnError:true)
 
         }  catch (Throwable throwable) {
