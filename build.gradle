@@ -67,4 +67,4 @@ task wrapper(type: Wrapper) {
     gradleVersion = '3.4.1' //we want gradle 2.10 to run this project
 }
 
-task stage(dependsOn: ['installDist'])
+task stage(dependsOn: ['wrapper'])
