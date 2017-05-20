@@ -1,1 +1,1 @@
-web:  java $JAVA_OPTS -Dgrails.env=prod -jar ../../server/jetty-runner-8.1.3.v20120416-sources.jar --port $PORT *.war
+web:  java $JAVA_OPTS -Dgrails.env=prod -jar ../../server/webapp-runner-7.0.27.1.jar --port $PORT *.war
