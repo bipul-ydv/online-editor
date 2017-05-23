@@ -22,6 +22,8 @@ class User implements Serializable {
 	String confirm_password
 	String gender
     String forgotPasswordUUID
+    Date  dateCreated
+    Date  lastUpdated
 
 	boolean enabled = true
 	boolean accountExpired

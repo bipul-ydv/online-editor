@@ -1,4 +1,4 @@
-
+grails.plugin.springsecurity.useSwitchUserFilter = true
 
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'com.online.editor.auth.User'
@@ -15,7 +15,8 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
 	[pattern: '/**/css/**',      access: ['permitAll']],
 	[pattern: '/**/images/**',   access: ['permitAll']],
 	[pattern: '/**/favicon.ico', access: ['permitAll']],
-	[pattern: '/**', access:[('hasAnyRole(\'ROLE_ADMIN\',\'ROLE_USER\')')]]
+	[pattern: '/**', access:[('hasAnyRole(\'ROLE_ADMIN\',\'ROLE_USER\')')]],
+	[pattern: '/login/impersonate', access: ['ROLE_SWITCH_USER', 'isFullyAuthenticated()']]
 ]
 
 grails.plugin.springsecurity.filterChain.chainMap = [

@@ -13,5 +13,6 @@ class UrlMappings {
         "500"(view:'/error')
         "404"(view:'/notFound')
         "/resetPassword/$uuid"(controller: 'user', action: 'changePassword')
+        "/api/ajaxGetRegisteredUser" controller: "admin", action: "ajaxGetRegisteredUser"
     }
 }
