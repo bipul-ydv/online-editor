@@ -68,3 +68,29 @@ task wrapper(type: Wrapper) {
 }
 
 task stage(dependsOn: ['wrapper'])
+
+
+dependencies {
+    compile 'com.github.jsimone:webapp-runner:8.5.11.3'
+}
+
+task stage1() {
+    dependsOn clean, war
+}
+war.mustRunAfter clean
+
+task copyToLib(type: Copy) {
+    into "$buildDir/server"
+    from(configurations.compile) {
+        include "webapp-runner*"
+    }
+}
+
+stage1.dependsOn(copyToLib)
+
+tasks.stage1.doLast() {
+    delete fileTree(dir: "build/distributions")
+    delete fileTree(dir: "build/assetCompile")
+    delete fileTree(dir: "build/distributions")
+    delete fileTree(dir: "build/libs", exclude: "*.war")
+}
