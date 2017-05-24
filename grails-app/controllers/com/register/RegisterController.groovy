@@ -13,7 +13,7 @@ import org.springframework.util.MultiValueMap
 class RegisterController {
 
     def index() {
-        [userInstancse: new User(params)]
+        [userInstance: new User(params)]
     }
 
     @Transactional
@@ -40,7 +40,9 @@ class RegisterController {
             UserRole userRole = new UserRole(user: user, role: role)
             userRole.save(flush: true, failOnError: true)
             flash.message = "Registered Successfully"
-            render view: "index"
+//            render view: "index"
+
+            redirect(action:"auth",controller:"login")
             }
         else if (userCommand.hasErrors() || (!captcha_validate)) {
             if (!captcha_validate) {

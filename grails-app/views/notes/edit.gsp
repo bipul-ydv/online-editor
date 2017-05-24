@@ -11,7 +11,9 @@
 <div class="container" id="wrap">
     <div class="row">
         <legend>Make Notes</legend>
-
+        <g:if test="${flash.message}">
+            <div class="message" role="status">${flash.message}</div>
+        </g:if>
         <g:form url="[resource:notes, action:'update']" method="PUT">
             <div>
                 <g:textArea id="myTextField" name="myTextField" value="${notes?.myTextField}" style="width: 100%;" rows="25"/>
