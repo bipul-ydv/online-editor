@@ -1,1 +1,1 @@
-web:  java $JAVA_OPTS -Dgrails.env=prod -jar ../../server/webapp-runner-7.0.27.1.jar --port $PORT *.war
+web: java $JAVA_OPTS -jar -Dserver.port=$PORT build/libs/*.war
