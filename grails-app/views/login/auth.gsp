@@ -3,66 +3,53 @@
 
 	<title><g:message code='springSecurity.login.title'/></title>
 	<asset:stylesheet src="login.css"></asset:stylesheet>
+	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 	<style type='text/css'>
-	 .h2{
-		 text-align: center;
-	}
-     body {
-         background-image: url("${resource(dir:'images', file:'online-editor1.jpg')}");
-         background-repeat: no-repeat;
-         background-attachment: fixed;
-         background-position: center;
-     }
+
 </style>
 </head>
 
 <body>
 
-<div class="h2">
-<h2>Online-Editor</h2>
-</div>
+<nav class="navbar navbar-default">
+	<div class = "navbar-header"></div>
+	<a class="navbar-brand">Online-Editor</a>
+</nav>
 <div class="container">
-	<div class="card card-container">
-		<!-- <img class="profile-img-card" src="//lh3.googleusercontent.com/-6V8xOA6M7BA/AAAAAAAAAAI/AAAAAAAAAAA/rzlHcD0KYwo/photo.jpg?sz=120" alt="" /> -->
-		<img id="profile-img" class="profile-img-card" src="//ssl.gstatic.com/accounts/ui/avatar_2x.png" />
-		<p id="profile-name" class="profile-name-card"></p>
+	<div class="row">
+		<div class="col-sm-6 col-md-4 col-md-offset-4" >
+			<h1 class="text-center login-title">Sign in to continue to Online-Editor</h1>
+			<div class="account-wall">
+				<img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
+					 alt="">
+				<form class="form-signin" action="${postUrl ?: '/login/authenticate'}" method="POST" id="loginForm" >
+					<g:if test='${flash.message}'>
+				    <div class="login_message">${flash.message}</div>
+			        </g:if>
+					<g:if test="${flash.error}">
+						${flash.error}
+			       </g:if>
+					<input type="text" class="form-control" placeholder="Username" id="username" name="${usernameParameter ?: 'username'}" required autofocus>
+					<br>
+					<input type="password" class="form-control" placeholder="Password" name="${passwordParameter ?: 'password'}"  id="password" required>
+					<button class="btn btn-lg btn-primary btn-block" id="submit" type="submit">
+						Sign in</button>
+					<p id="remember_me_holder">
+						<input type="checkbox" class="chk" name="${rememberMeParameter ?: 'remember-me'}" id="remember_me" <g:if test='${hasCookie}'>checked="checked"</g:if>/>
+						<label for="remember_me"><g:message code='springSecurity.login.remember.me.label'/></label>
+					</p>
+					<a href="${createLink(controller:'user', action:'forgotPassword')}" class="pull-right need-help">Forgot the Password? </a><span class="clearfix"></span>
+					<a href="${createLink(controller:'register', action:'index')}"  class="pull-right need-help">Don't have an account? SignUp </a><span class="clearfix"></span>
 
+				</form>
 
-		<form action="${postUrl ?: '/login/authenticate'}" method="POST" id="loginForm" class="form-signin">
-			<g:if test='${flash.message}'>
-				<div class="login_message">${flash.message}</div>
-			</g:if>
-			<g:if test="${flash.error}">
-				${flash.error}
-			</g:if>
-			<p>
-				<label for="username"><g:message code='springSecurity.login.username.label'/>:</label>
-				<input type="text" class="form-control" placeholder="username" required autofocus name="${usernameParameter ?: 'username'}" id="username"/>
-			</p>
+			</div>
 
-			<p>
-				<label for="password"><g:message code='springSecurity.login.password.label'/>:</label>
-				<input type="password" class="form-control" placeholder="Password" required name="${passwordParameter ?: 'password'}" id="password"/>
-			</p>
-
-			<p id="remember_me_holder">
-				<input type="checkbox" class="chk" name="${rememberMeParameter ?: 'remember-me'}" id="remember_me" <g:if test='${hasCookie}'>checked="checked"</g:if>/>
-				<label for="remember_me"><g:message code='springSecurity.login.remember.me.label'/></label>
-			</p>
-
-			<p>
-				<input type="submit"class="btn btn-lg btn-primary btn-block btn-signin" id="submit" value="${message(code: 'springSecurity.login.button')}"/>
-			</p>
-		</form>
-		<a href="${createLink(controller:'user', action:'forgotPassword')}" class="forgot-password">
-			Forgot the password?
-		</a>
-		<p>
-		<a href="${createLink(controller:'register', action:'index')}" class="forgot-password">
-			Don't have an account?Signup
-		</a>
-		</p>
+		</div>
 	</div>
+</div>
+
+</div>
 </div>
 <script>
 (function() {
@@ -71,3 +58,4 @@
 </script>
 </body>
 </html>
+

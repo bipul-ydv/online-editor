@@ -2,12 +2,7 @@
 <html>
 <head>
 <style>
-body {
-    background-image: url("${resource(dir:'images', file:'online-editor1.jpg')}");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-}
+
 </style>
 </head>
 

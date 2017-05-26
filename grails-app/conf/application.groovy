@@ -1,4 +1,5 @@
 grails.plugin.springsecurity.useSwitchUserFilter = true
+grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/notes/index'
 
 // Added by the Spring Security Core plugin:
 grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/notes/index'

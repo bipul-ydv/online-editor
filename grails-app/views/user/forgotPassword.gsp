@@ -2,38 +2,38 @@
 <html>
 <head>
     <asset:stylesheet src="login.css"></asset:stylesheet>
-    <style>
-body {
-    background-image: url("${resource(dir:'images', file:'online-editor1.jpg')}");
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center;
-}
-</style>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
 </head>
 <body>
 
 
+<nav class="navbar navbar-default">
+    <div class = "navbar-header"></div>
+    <a class="navbar-brand">Online-Editor</a>
+</nav>
 <div class="container">
-    <div class="card card-container">
-        <form class="form-signin" action="processForgottenPassword">
-            <g:if test="${flash.message}">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4" >
+            <g:if test='${flash.message}'>
                 ${flash.message}
             </g:if>
             <g:if test="${flash.error}">
                 ${flash.error}
             </g:if>
-            <P>
-                Enter your Email id you have used while signup.We will send you link to change your password.
-            </P>
-            <span id="reauth-email" class="reauth-email"></span>
+            <div class="account-wall">
+                <h4>Enter your email id you have used while signup</h4>
+                <form class="form-signin" action="processForgottenPassword">
+                    <input type="text" class="form-control" name = "email" placeholder="Email" required autofocus>
+                    <br>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">
+                        Continue</button>
+                </form>
 
-            <input type="email" id="inputEmail" class="form-control" placeholder="Email" name="email" required autofocus>
+            </div>
 
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Continue</button>
-        </form><!-- /form -->
-
-    </div><!-- /card-container -->
+        </div>
+    </div>
 </div>
 
 </body>

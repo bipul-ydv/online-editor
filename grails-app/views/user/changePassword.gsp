@@ -3,41 +3,44 @@
 <head>
 
     <asset:stylesheet src="login.css"></asset:stylesheet>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
     <style>
-    body {
-        background-image: url("${resource(dir:'images', file:'online-editor1.jpg')}");
-        background-repeat: no-repeat;
-        background-attachment: fixed;
-        background-position: center;
-    }
+
     </style>
 </head>
 <body>
 
+<nav class="navbar navbar-default">
+    <div class = "navbar-header"></div>
+    <a class="navbar-brand">Online-Editor</a>
+</nav>
 <div class="container">
-    <div class="card card-container">
+    <div class="row">
+        <div class="col-sm-6 col-md-4 col-md-offset-4" >
+            <h1 class="text-center login-title">Enter Your New Password</h1>
+            <div class="account-wall">
+                <img class="profile-img" src="https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120"
+                     alt="">
+                <g:form class="form-signin" action="saveNewPassword">
+                    <g:if test="${flash.message}">
+                        ${flash.message}
+                    </g:if>
+                    <g:if test="${flash.error}">
+                        ${flash.error}
+                    </g:if>
+                    <input type="hidden" value="${uuid}" name="uuid" />
+                    <input type="text" class="form-control" placeholder="Password" name = "password" required autofocus>
+                    <br>
+                    <input type="password" class="form-control" placeholder="Confirm Password" name="confirmPassword" required>
+                    <button class="btn btn-lg btn-primary btn-block" type="submit">
+                        Save</button>
+                </g:form>
 
-        <g:form class="form-signin" controller="user" action="saveNewPassword">
+            </div>
 
-            <g:if test="${flash.message}">
-                ${flash.message}
-            </g:if>
-            <g:if test="${flash.error}">
-                ${flash.error}
-            </g:if>
-            <input type="hidden" value="${uuid}" name="uuid" />
-
-            <span id="reauth-email" class="reauth-email"></span>
-
-            <h4>Enter your New Password</h4>
-            <input type="password" id="inputEmail" class="form-control" placeholder="New Password" name = "password"  autofocus>
-            <input type="password" id="inputPassword" class="form-control" placeholder="Confirm New Password" name = "confirmPassword" >
-
-
-            <button class="btn btn-lg btn-primary btn-block btn-signin" type="submit">Save</button>
-        </g:form><!-- /form -->
-
-    </div><!-- /card-container -->
+        </div>
+    </div>
 </div>
 
 </body>
