@@ -1,7 +1,7 @@
 package com.online.editor
 
 class Notes {
-
+//    String id
     String myTextField;
 
     static mapping = {
@@ -10,4 +10,7 @@ class Notes {
 
     static constraints = {
     }
+    /* static mapping = {
+        id generator:'uuid'
+    }*/
 }

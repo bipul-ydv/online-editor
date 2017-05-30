@@ -7,83 +7,64 @@
 <asset:link rel="icon" href="favicon.ico" type="image/x-ico" />
 <link rel="stylesheet" href="${resource(dir: 'css', file: 'bootstrap.css')}" type="text/css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
-<script type="text/css">
-#wrap{
-background-image: -ms-linear-gradient(top, #FFFFFF 0%, #D3D8E8 100%);
-/* Mozilla Firefox */
-background-image: -moz-linear-gradient(top, #FFFFFF 0%, #D3D8E8 100%);
-/* Opera */
-background-image: -o-linear-gradient(top, #FFFFFF 0%, #D3D8E8 100%);
-/* Webkit (Safari/Chrome 10) */
-background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #FFFFFF), color-stop(1, #D3D8E8));
-/* Webkit (Chrome 11+) */
-background-image: -webkit-linear-gradient(top, #FFFFFF 0%, #D3D8E8 100%);
-/* W3C Markup, IE10 Release Preview */
-background-image: linear-gradient(to bottom, #FFFFFF 0%, #D3D8E8 100%);
-background-repeat: no-repeat;
-background-attachment: fixed;
-}
-legend{
- color:#141823;
- font-size:25px;
- font-weight:bold;
-}
-.signup-btn {
-background: #79bc64;
-background-image: -webkit-linear-gradient(top, #79bc64, #578843);
-background-image: -moz-linear-gradient(top, #79bc64, #578843);
-background-image: -ms-linear-gradient(top, #79bc64, #578843);
-background-image: -o-linear-gradient(top, #79bc64, #578843);
-background-image: linear-gradient(to bottom, #79bc64, #578843);
--webkit-border-radius: 4;
--moz-border-radius: 4;
-border-radius: 4px;
-text-shadow: 0px 1px 0px #898a88;
--webkit-box-shadow: 0px 0px 0px #a4e388;
--moz-box-shadow: 0px 0px 0px #a4e388;
-box-shadow: 0px 0px 0px #a4e388;
-font-family: Arial;
-color: #ffffff;
-font-size: 20px;
-padding: 10px 20px 10px 20px;
-border: solid #3b6e22  1px;
-text-decoration: none;
-}
+    <style type="text/css">
+   .navbar-default
+    {color: black}
+        </style>
 
-.signup-btn:hover {
-background: #79bc64;
-background-image: -webkit-linear-gradient(top, #79bc64, #5e7056);
-background-image: -moz-linear-gradient(top, #79bc64, #5e7056);
-background-image: -ms-linear-gradient(top, #79bc64, #5e7056);
-background-image: -o-linear-gradient(top, #79bc64, #5e7056);
-background-image: linear-gradient(to bottom, #79bc64, #5e7056);
-text-decoration: none;
-}
-.navbar-default .navbar-brand{
-     color:#fff;
-     font-size:30px;
-     font-weight:bold;
- }
-.form .form-control { margin-bottom: 10px; }
-@media (min-width:768px) {
- #home{
-     margin-top:50px;
- }
- #home .slogan{
-     color: #0e385f;
-     line-height: 29px;
-     font-weight:bold;
- }
-}
- </script>
 <script src='https://www.google.com/recaptcha/api.js'></script>
 </head>
-<body></body>
+<body>
+
+
+
+<nav class="navbar navbar-default" role="navigation">
+    <div class="navbar-header">
+        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+        </button>
+        <a class="navbar-brand" href="#">Online Editor</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav">
+            <li><g:link class="" controller="notes" action="create">New Note</g:link></li>
+        </ul>
+
+        <ul class="nav navbar-nav navbar-right">
+            <sec:ifLoggedIn>
+                <li><form name="logout" method="POST" action="${createLink(controller:'logout') }">
+                    <span class="glyphicon glyphicon-log-out"></span>
+                    <input class="btn-link " type="submit" value="Logout" style="
+                    padding-top: 15px;
+                    border-left-width: 0px;
+                    border-top-width: 0px;
+                    padding-right: 15px;
+                    padding-left: 5px;
+                    padding-bottom: 15px;
+                    text-decoration: none;
+                    "></form>
+                </li>
+            </sec:ifLoggedIn>
+        </ul>
+    </div>
+</nav>
+
+
+
 <div class="container" id="wrap">
     <div class="row">
-        <div class="col-sm-6 col-sm-offset-3">
+        <div class="col-sm-6 col-sm-offset-3    ">
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <span class="glyphicon glyphicon-list"></span> Register Here
+                </div>
 
-            <legend>Register Here</legend>
+                <div class="panel-body">
+            %{--<legend>Register Here</legend>--}%
 
             <g:form action="create" method="POST">
 
@@ -154,16 +135,19 @@ text-decoration: none;
                 <g:if test="${flash.warning}">
                     <div class="message" role="status" style="color: darkred">${flash.warning}</div>
                 </g:if>
+                <br><br>
+                <div class="g-recaptcha" data-sitekey="6LetkSEUAAAAALH7vPOoQ0I6MQTywVMujf_ouGBZ" ></div>
 
-                <div class="g-recaptcha" data-sitekey="6LetkSEUAAAAALH7vPOoQ0I6MQTywVMujf_ouGBZ"></div>
-                </br>
+                <br>
                     <div class="col-sm-7 col-sm-offset-5 errorCode">
-                    <button type="submit" name="Submit" value="Submit">Submit</button>
+                    <button type="submit" class="btn btn-primary" name="Submit" value="Submit">Submit</button>
                     </div>
             </g:form>
         </div>
     </div>
 </div>
 </div>
+</div>
+</body>
 </html>
 

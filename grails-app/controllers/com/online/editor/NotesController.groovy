@@ -16,6 +16,9 @@ class NotesController {
 
     def index(Integer max) {
         params.max = Math.min(max ?: 10, 100)
+        def val= Notes.list(params)
+        println val.myTextField
+
         respond Notes.list(params), model:[notesCount: Notes.count()]
     }
 
@@ -31,12 +34,16 @@ class NotesController {
     def save(Notes notes) {
         println params
         if (notes == null) {
+            flash.message = "Empty Note Cannot be saved"
             transactionStatus.setRollbackOnly()
             notFound()
             return
         }
 
         if (notes.hasErrors()) {
+            if(params.myTextField == '') {
+                flash.warning = "Empty Note Cannot be saved"
+            }
             transactionStatus.setRollbackOnly()
             respond notes.errors, view:'create'
             return
