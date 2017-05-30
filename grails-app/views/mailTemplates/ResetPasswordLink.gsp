@@ -6,9 +6,8 @@
 <h2>Hi ${fullName}</h2>
 
 <g:form controller="user" action="changePassword">
-To Reset Your Password<a href="${verificationLink}">Click here</a>
+To Reset Your Password <a href="${verificationLink}"> Click here </a>
 </g:form>
-
 
 </body>
 </html>

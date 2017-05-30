@@ -1,20 +1,24 @@
 package com.online.editor
 
 import com.online.editor.auth.User
-import grails.plugin.asyncmail.AsynchronousMailService
+
+import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.transform.Synchronized
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
-@Secured(['ROLE_USER','ROLE_ADMIN'])
+@Secured(['permitAll'])
 @Transactional(readOnly = true)
 class NotesController {
-    AsynchronousMailService asynchronousMailService
-    def springSecurityService
+
     static allowedMethods = [save: "POST", update: "PUT", delete: "DELETE"]
 
     def index(Integer max) {
+        if(SpringSecurityUtils.ifAllGranted("ROLE_SWITCH_USER")) {
+            redirect(action:"home",controller:"admin")
+
+        }
         params.max = Math.min(max ?: 10, 100)
         def val= Notes.list(params)
         println val.myTextField
@@ -109,31 +113,6 @@ class NotesController {
             '*'{ render status: NO_CONTENT }
         }
     }
-
-
-    def mailMe(){
-        Object obj = new Object();
-        Notes note = Notes.get(params.id)
-        synchronized (obj){
-            def file = new File("myNote.text");
-//            User user = springSecurityService.getCurrentUser();
-            String email = "bipulydv@gmail.com"//change to user from springsecurity 'User email = current.getUserFromSpringSecurity()'
-            file.write(note.myTextField)
-            if (file.exists()) {
-                asynchronousMailService.sendMail {
-                    to email
-                    subject "My Note"
-                    body("Please find your notes")
-                    attachBytes file.getName(), 'text/plain', file.getBytes();
-                }
-                file.delete()
-            }
-        }
-        flash.message = "Notes are mailed at your email Id"
-//        render "mail send"
-        respond note, view:'show'
-    }
-
 
     protected void notFound() {
         request.withFormat {
