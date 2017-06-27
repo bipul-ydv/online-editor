@@ -1,15 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta name="layout" content="" />
-    <g:set var="entityName" value="${message(code: 'notes.label', default: 'Notes')}" />
-    <title><g:message code="default.list.label" args="[entityName]" /></title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" >
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <meta name="layout" content="main" />
+    <g:set var="entityName" value="${message(code: 'notes.label', default: 'Notes')}" />
+    <title><g:message code="default.list.label" args="[entityName]" /></title>
     <style type="text/css">
     .trash { color:rgb(209, 91, 71); }
     .flag { color:rgb(248, 148, 6); }
@@ -50,66 +46,20 @@
     .modal .modal-footer .btn-group > .btn:last-child {
         border-top-right-radius: 0;
     }
-
     </style>
-
-
-
     <script type="application/javascript">
-//    var idValue;
-$(function(){
-    $('a[data-toggle="tooltip"]').tooltip();
-});
+        $(function(){
+            $('a[data-toggle="tooltip"]').tooltip();
+        });
 
-function reply_click(clicked_id) {
-    var idValue = clicked_id;
-    console.log(idValue);
-    document.getElementById("id").value = idValue;
-}
+        function reply_click(clicked_id) {
+            var idValue = clicked_id;
+            console.log(idValue);
+            document.getElementById("id").value = idValue;
+        }
     </script>
 </head>
-
 <body>
-
-
-<nav class="navbar navbar-default" role="navigation">
-    <div class="navbar-header">
-        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-        </button>
-        <a class="navbar-brand" href="#">Online Editor</a>
-    </div>
-
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        <ul class="nav navbar-nav">
-            <li><g:link class="create" action="create">New Note</g:link></li>
-            <li><g:link action="index">List Note</g:link></li>
-            <li><g:link controller="user" action="showProfile">My Profile</g:link></li>
-        </ul>
-        <ul class="nav navbar-nav navbar-right">
-            <sec:ifLoggedIn>
-                <li><form name="logout" method="POST" action="${createLink(controller:'logout') }">
-                    <span class="glyphicon glyphicon-log-out"></span>
-                    <input class="btn-link " type="submit" value="Logout" style="
-                    padding-top: 15px;
-                    border-left-width: 0px;
-                    border-top-width: 0px;
-                    padding-right: 15px;
-                    padding-left: 5px;
-                    padding-bottom: 15px;
-                    "></form>
-                </li>
-            </sec:ifLoggedIn>
-        </ul>
-    </div>
-</nav>
-
-
-
-
 <div class="container">
     <div class="row">
         <g:if test="${flash.message}">
@@ -138,7 +88,6 @@ function reply_click(clicked_id) {
                                         </label>
                                     </a>
                                 </div>
-
                                 <span class=" pull-right action-buttons" style="text-decoration: none">
                                     <a href="/notes/edit/${it.first()}" data-toggle="tooltip" data-placement="top" title="Edit Note"><span class="glyphicon glyphicon-pencil"></span></a>
                                     <a href="/notes/show/${it.first()}" data-toggle="tooltip" data-placement="top" title="Show Note"><span class="glyphicon glyphicon-list-alt"></span></a>
@@ -148,7 +97,6 @@ function reply_click(clicked_id) {
                             </li>
                         </g:each>
                 </div>
-
                 <div class="panel-footer">
                     <div class="row">
                         <div class="col-md-6">
@@ -162,7 +110,6 @@ function reply_click(clicked_id) {
                                 </div>
                             </ul>
                         </div>
-
                         <div class="modal fade bs-example-modal-lg" id="modalOnoff" tabindex="-1" role="dialog" aria-labelledby="lbOnoff">
                             <div class="modal-dialog" role="document">
                                 <div class="modal-content">

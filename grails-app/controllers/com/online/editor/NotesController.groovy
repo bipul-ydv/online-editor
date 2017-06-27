@@ -1,17 +1,13 @@
 package com.online.editor
 
 import com.online.editor.auth.Content
-
 import com.online.editor.auth.User
 import grails.plugin.asyncmail.AsynchronousMailService
-import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.annotation.Secured
-import grails.web.mapping.LinkGenerator
-
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
-@Secured(['permitAll'])
+@Secured(['ROLE_USER','ROLE_ADMIN'])
 @Transactional(readOnly = true)
 class NotesController {
     AsynchronousMailService asynchronousMailService
@@ -29,23 +25,20 @@ class NotesController {
 
     @Secured('permitAll')
     def show(Notes notes) {
-        println "inside show"
-        println params
         List<NotesPermission> note = NotesPermission.findAllByNotesId(notes.id)
         if(note.size()>1){
             respond notes
         }else {
-
-            User presentUser = springSecurityService?.currentUser//if permitUser user is null i.e notes was not shared with him/her
+            User presentUser = springSecurityService?.currentUser
             NotesPermission permitUser = NotesPermission.findByEmailId(presentUser?.email)
             if (permitUser == null) {
-                render view: "../404"//permission not granted
+                render view: "../404"
             }
 
             if ((notes.user == presentUser) || (permitUser != null)) {
                 respond notes
             } else {
-                render view: "../404"//Read Not Allowed
+                render view: "../404"
             }
         }
     }
@@ -62,7 +55,6 @@ class NotesController {
             notFound()
             return
         }
-
         if (notes.hasErrors()) {
             if(params.myTextField == '') {
                 flash.warning = "Empty Note Cannot be saved"
@@ -71,17 +63,12 @@ class NotesController {
             respond notes.errors, view:'create'
             return
         }
-
         User user = springSecurityService.getCurrentUser()
         notes.save()
         user.addToNotes(notes).save()
         notes.save()
-        println user.email
-        println notes.id
-
         //set the permission of the notes to user who created
         NotesPermission notesPermission = new NotesPermission(emailId: user.email,notesId: notes.id,allowRead: true,allowWrite: true).save()
-
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.created.message', args: [message(code: 'notes.label', default: 'Notes')])
@@ -92,15 +79,11 @@ class NotesController {
     }
 
     def edit(Notes notes) {
-
-        User presentUser  = springSecurityService.currentUser//if present user is null i.e notes was not shared with him/her
-
+        User presentUser  = springSecurityService.currentUser
         NotesPermission notesPermission = NotesPermission.findByEmailId(presentUser?.email)
-
         if(notesPermission == null){
             render view: "../404"
         }
-
         if((notes.user == presentUser) || (notesPermission?.allowWrite)){
             respond notes
         }else {
@@ -110,7 +93,6 @@ class NotesController {
 
     @Transactional
     def update(Notes notes) {
-        println params.myTextField
         if(params.myTextField == '') {
             flash.warning = "Empty Note Cannot be saved"
         }
@@ -120,28 +102,19 @@ class NotesController {
             notFound()
             return
         }
-
         if (notes.hasErrors()) {
             transactionStatus.setRollbackOnly()
             respond notes.errors, view:'edit'
             return
         }
-
-
         User presentUser  = springSecurityService.currentUser
-
-        NotesPermission notesPermission = NotesPermission.findByEmailId(presentUser?.email)//if PERMIT user is null i.e notes was not shared with him/her
-
+        NotesPermission notesPermission = NotesPermission.findByEmailId(presentUser?.email)
         if(notesPermission == null){
             render view: "../404"
         }
-
         if((notes.user == presentUser) || (notesPermission?.allowWrite)) {
             notes.save()
         }
-
-
-
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.updated.message', args: [message(code: 'notes.label', default: 'Notes')])
@@ -159,11 +132,9 @@ class NotesController {
             notFound()
             return
         }
-
         if(notes.user == springSecurityService.currentUser) {
             notes.delete()
         }
-
         request.withFormat {
             form multipartForm {
                 flash.message = message(code: 'default.deleted.message', args: [message(code: 'notes.label', default: 'Notes')])
@@ -207,36 +178,27 @@ class NotesController {
     }
 
 
-        def share(){
-        println params
+    def share(){
         List<User> allUserEmail = params.emailList
         String notesUrl =  grailsLinkGenerator.link(controller: 'notes', action: 'show', id:params.id, absolute: true)
-        //notes already shared with
         ArrayList<NotesPermission> alreadyShared = NotesPermission.findAllByNotesId(params?.id)
-        //all registered user
         List<String> registerdUser = User.executeQuery("Select email from User where email IN (:list)",[list:allUserEmail]);
-        println registerdUser
         List<String> newUser = new ArrayList<>();
         Set allUser = new HashSet<String>();
         allUser.addAll(registerdUser )
         allUser.addAll(alreadyShared.emailId)
-        System.out.println("========================These User do not exist  send an invitation for registration============================")
          for (int i = 0; i <params.emailList.size(); i++) {
             if(!allUser.contains(params.emailList[i])) {
                 if(params.emailList[i].size() == 0) {
                     continue
                 }
-                System.out.println("==============Non-Exist==========" + params.emailList[i] + "============================")
                 newUser.add(params.emailList[i].toString())
             }
         }
-
-        //not shared already=====>>   alreadyShared-params.emailList
         List<String> inviteUser = new ArrayList<>();
         for (int j = 0; j < params.emailList.size(); j++) {
             if (!allUser.contains(params.emailList[j])) {
                 inviteUser.add(params.emailList[j])
-                //never shared this note with user are added i.e first time shared with these users
                 NotesPermission noteP = new NotesPermission(notesId: params.id, emailId: params.emailList[j])
                 if (params.permission[j] == 'write') {
                     noteP.allowRead = true
@@ -248,7 +210,6 @@ class NotesController {
                 noteP.save()
             }
         }
-
             if (newUser.size() > 0) {
                 def content = groovyPageRenderer.render(template: '/notes/haapybirthday')
                 asynchronousMailService.sendMail {
@@ -256,9 +217,8 @@ class NotesController {
                     subject "Notes Invitation"
                     body("${springSecurityService.currentUser.username} has shared a document with you. You can view the note here: " + notesUrl);
                 }
-                println "${springSecurityService.currentUser.username} has shared a document with you." + notesUrl
             }
             flash.message = "Notes Shared"
             redirect controller: "notes", action: "index"
-        }
+    }
 }

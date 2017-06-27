@@ -21,7 +21,6 @@
         <g:form action="save" method="POST" enctype='multipart/form-data'>
             <div>
                 <g:textArea class="form-control" placeholder="Start Here" id="myField" name="myTextField" value="" style="width: 100%;" rows="25"/>
-                %{--<input class="inputFiles" type="file" name="fileupload" multiple="multiple" accept="image/*" />--}%
             </div>
             </br>
             <button type="submit" class="btn btn-primary" name="Submit" value="Make Note">Save Note</button>
