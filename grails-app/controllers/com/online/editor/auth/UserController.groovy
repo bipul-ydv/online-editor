@@ -1,14 +1,31 @@
 package com.online.editor.auth
 
+import com.cloudinary.Cloudinary
+import com.cloudinary.utils.ObjectUtils
 import grails.plugin.springsecurity.annotation.Secured
+import grails.plugins.rest.client.RestBuilder
+import org.springframework.transaction.annotation.Transactional
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.util.MultiValueMap
+import org.springframework.web.multipart.MultipartFile
 
+import javax.imageio.ImageIO
+import javax.xml.bind.DatatypeConverter
+import java.awt.image.BufferedImage
+
+import static org.springframework.http.HttpStatus.OK
+
+@Secured(['ROLE_USER','ROLE_ADMIN'])
 
 class UserController {
     def asyncMailService
     def utilityService
     def mailerService
+    def asynchronousMailService
+    def springSecurityService
 
-    def index() { }
+
+    static allowedMethods = [updateProfile: "POST"]
 
     @Secured('IS_AUTHENTICATED_ANONYMOUSLY')
     def forgotPassword(){
@@ -38,21 +55,18 @@ class UserController {
 
     @Secured('IS_AUTHENTICATED_ANONYMOUSLY')
     def changePassword(){
-
         if(!params.uuid){
             flash.error = "${g.message(code: 'user.forgetPassword.linkExpired')}"
             redirect controller: 'login' , action: 'auth'
             return
         }
         User user = User.findByForgotPasswordUUID(params.uuid)
-
         if (!user) {
             flash.error = "${g.message(code: 'user.forgetPassword.linkExpired')}"
             redirect controller: 'login' , action: 'auth'
             return
         }
         [uuid: params.uuid]
-
     }
 
     @Secured('IS_AUTHENTICATED_ANONYMOUSLY')
@@ -99,6 +113,206 @@ class UserController {
         }
         flash.message = "You have successfully change your password"
         redirect controller: 'login' , action: 'auth'
+    }
+
+    @Secured('permitAll')
+    def index() {
+        [userInstance: new User(params)]
+    }
+
+    @Transactional
+    def create(UserCommand userCommand) {
+        String responseVal = params.'g-recaptcha-response';
+        RestBuilder rest = new RestBuilder()
+        MultiValueMap<String, String> form = new LinkedMultiValueMap<String, String>()
+        form.add("secret", "6LetkSEUAAAAAGaD99LZKyl5xXk5Hq7g71KKojp3")
+        form.add("response", responseVal)
+
+        def resp = rest.post("https://www.google.com/recaptcha/api/siteverify") {
+            accept("application/json")
+            contentType("application/x-www-form-urlencoded")
+            body(form)
+        }
+
+        boolean captcha_validate = resp.json.success
+
+        if (userCommand.validate() && captcha_validate) {
+            User user = new User()
+            user.enabled=false
+            bindData(user, userCommand)
+            user.forgotPasswordUUID = UUID.randomUUID()
+            user.save()
+            Role role = Role.findByAuthority("ROLE_USER")
+            UserRole userRole = new UserRole(user: user, role: role)
+            userRole.save()
+            String url = grailsLinkGenerator.link(controller: 'user', action: 'verifyAccount', id:user.forgotPasswordUUID, absolute: true)
+
+            asynchronousMailService.sendMail {
+                to user?.email
+                subject "Email Confirmation"
+                body("Please confirm your email by clicking this link or copy paste in browser: "+url)
+            }
+
+            flash.message = "Registered Successfully Verification Email is send to You"
+            redirect(action:"auth",controller:"login")
+        }
+        else if (userCommand.hasErrors() || (!captcha_validate)) {
+            if (!captcha_validate) {
+                flash.warning = "Captcha Failed"
+            }
+            render view: "index", model: [userInstance: userCommand]
+        }
+    }
+
+    @Secured('permitAll')
+    def verifyAccount(){
+        println params
+        User user = User.findByForgotPasswordUUID(params.id)
+        if(!user){
+            render "Link has expired"
+            return
+        }
+        user.enabled =true
+        user.forgotPasswordUUID = null
+        user.save()
+        flash.message = "Account Activated Please login"
+        redirect(action:"auth",controller:"login")
+    }
+
+
+    def showProfile(){
+        User user = springSecurityService.getCurrentUser()
+        if(!user){
+            return
+        }else{
+            respond user
+        }
+    }
+
+    def editProfile(){
+        User user = springSecurityService.getCurrentUser()
+        println user.imageUrl
+        if(!user){
+            return
+        }else{
+            respond user
+        }
+    }
+
+    @Transactional
+    def updateProfile(User user){
+        println params
+        if (user == null) {
+            render view: "../404"
+            transactionStatus.setRollbackOnly()
+            notFound()
+            return
+        }
+        Map uploadResult = null
+        if(params.fileupload != "undefined") {
+            String str = params.fileupload
+            byte[] imagedata = DatatypeConverter.parseBase64Binary(str.substring(str.indexOf(",") + 1));
+            BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(imagedata));
+            ImageIO.write(bufferedImage, "png", new File("${user.username}.png"));
+
+
+            String apiKey = getGrailsApplication().config.grails.plugin.cloudinary.apiKey
+            String apiSecret = getGrailsApplication().config.grails.plugin.cloudinary.apiSecret
+            String cloudName = getGrailsApplication().config.grails.plugin.cloudinary.cloudName
+
+            Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                    "cloud_name", cloudName,
+                    "api_key", apiKey,
+                    "api_secret", apiSecret));
+
+            File file = new File("${user.username}.png");
+            uploadResult = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+            println uploadResult
+        }
+
+
+
+       // Upload image on cloudinary from multipart file
+
+        /*User currentUser = springSecurityService.getCurrentUser()
+        User existingUser = User.findByUsername(user.username)
+        if(currentUser.id == existingUser.id) {
+            if (params.fileupload != "") {
+                    String apiKey = getGrailsApplication().config.grails.plugin.cloudinary.apiKey
+                    String apiSecret = getGrailsApplication().config.grails.plugin.cloudinary.apiSecret
+                    String cloudName = getGrailsApplication().config.grails.plugin.cloudinary.cloudName
+
+                    Cloudinary cloudinary = new Cloudinary(ObjectUtils.asMap(
+                            "cloud_name", cloudName,
+                            "api_key", apiKey,
+                            "api_secret", apiSecret));
+
+                    MultipartFile imageFile = request.getFile('fileupload')
+                    File toUpload = new File(imageFile.getOriginalFilename());
+                    if (toUpload != "") {
+                        toUpload.createNewFile();
+                        FileOutputStream fos = new FileOutputStream(toUpload);
+                        fos.write(imageFile.getBytes());
+                        Map uploadResult = cloudinary.uploader().upload(toUpload, ObjectUtils.emptyMap());
+                        println uploadResult.url
+                        existingUser.imageUrl = uploadResult.url
+                    }
+            }
+
+            bindData(existingUser,params)
+            flash.message = "Profile Updated"
+            existingUser.save(flush:true)
+
+
+             User currentUser = springSecurityService.getCurrentUser()
+        User existingUser = User.findByUsername(user.username)
+        if(currentUser.id == existingUser.id) {
+         bindData(existingUser, params)
+            flash.message = "Profile Updated"
+            existingUser.save(flush: true)
+        }
+
+
+
+        }*/
+
+
+        User currentUser = springSecurityService.getCurrentUser()
+        User existingUser = User.findByUsername(user.username)
+        if(currentUser.id == existingUser.id) {
+
+            if(params.fileupload == "undefined") {
+                params.fileupload = existingUser.imageUrl
+            }else{
+                existingUser.imageUrl = uploadResult?.url
+            }
+
+            if(existingUser.imageUrl == null) {
+                bindData(existingUser, params,[exclude: ['imageUrl']])
+                flash.message = "Profile Updated"
+                existingUser.save()
+            }
+            else {
+                bindData(existingUser, params)
+                flash.message = "Profile Updated"
+                existingUser.save()
+            }
+        }
+
+        if (existingUser.hasErrors()) {
+            println existingUser.errors
+            respond existingUser.errors, view:'showProfile'
+            return
+        }
+
+        request.withFormat {
+            form multipartForm {
+                flash.message = message(code: 'default.updated.message', args: [message(code: 'profile.label', default: 'Profile')])
+                redirect action: 'showProfile'
+            }
+            '*'{ respond user, [status: OK] }
+        }
+
     }
 
 }

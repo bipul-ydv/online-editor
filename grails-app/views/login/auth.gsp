@@ -1,6 +1,17 @@
 <html>
 <head>
+	<meta name="layout" content="main" />
 
+	<%
+		response.setHeader("Cache-Control","no-cache");
+
+		response.setHeader("Cache-Control","no-store");
+
+		response.setDateHeader("Expires", 0);
+
+		response.setHeader("Pragma","no-cache");
+
+	%>
 	<title><g:message code='springSecurity.login.title'/></title>
 	<asset:stylesheet src="login.css"></asset:stylesheet>
 	<link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
@@ -11,10 +22,6 @@
 
 <body>
 
-<nav class="navbar navbar-default">
-	<div class = "navbar-header"></div>
-	<a class="navbar-brand">Online-Editor</a>
-</nav>
 <div class="container">
 	<div class="row">
 		<div class="col-sm-6 col-md-4 col-md-offset-4" >
@@ -39,7 +46,7 @@
 						<label for="remember_me"><g:message code='springSecurity.login.remember.me.label'/></label>
 					</p>
 					<a href="${createLink(controller:'user', action:'forgotPassword')}" class="pull-right need-help">Forgot the Password? </a><span class="clearfix"></span>
-					<a href="${createLink(controller:'register', action:'index')}"  class="pull-right need-help">Don't have an account? SignUp </a><span class="clearfix"></span>
+					<a href="${createLink(controller:'user', action:'index')}"  class="pull-right need-help">Don't have an account? SignUp </a><span class="clearfix"></span>
 
 				</form>
 

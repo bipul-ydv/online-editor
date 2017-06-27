@@ -23,9 +23,13 @@ apply plugin:"asset-pipeline"
 repositories {
     mavenLocal()
     maven { url "https://repo.grails.org/grails/core" }
+//    mavenRepo {"http://dl.bintray.com/infinit/infinit-opensource"}
+
 }
 
 dependencies {
+//    compile "org.grails.plugins:cloudinary:1.0.4"
+    compile 'com.cloudinary:cloudinary-http44:1.2.2'
     compile "org.springframework.boot:spring-boot-starter-logging"
     compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.grails:grails-core"
@@ -50,6 +54,7 @@ dependencies {
     testCompile "org.grails.plugins:geb"
     testRuntime "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
+
 }
 
 bootRun {

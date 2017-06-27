@@ -47,3 +47,9 @@ grails {
 
 
 
+grails.plugin.cloudinary.apiKey = '294573179876242'
+grails.plugin.cloudinary.apiSecret = 'PkFuwReQG9axvVpF14JzjnCqyv0'
+grails.plugin.cloudinary.cloudName = 'dasrukpib'
+
+
+

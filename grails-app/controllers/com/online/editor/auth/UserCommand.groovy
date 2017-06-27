@@ -1,4 +1,4 @@
-package com.register
+package com.online.editor.auth
 
 import com.online.editor.auth.User
 

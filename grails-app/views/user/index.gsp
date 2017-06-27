@@ -1,10 +1,10 @@
 <!doctype html>
 <html>
 <head>
-    <meta name="layout" content=""/>
+    <meta name="layout" content="main"/>
     <title>Welcome to Grails</title>
 
-<asset:link rel="icon" href="favicon.ico" type="image/x-ico" />
+%{--<asset:link rel="icon" href="favicon.ico" type="image/x-ico" />--}%
 <link rel="stylesheet" href="${resource(dir: 'css', file: 'bootstrap.css')}" type="text/css">
 <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
     <style type="text/css">
@@ -18,6 +18,7 @@
 
 
 
+%{--
 <nav class="navbar navbar-default" role="navigation">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
@@ -52,12 +53,13 @@
         </ul>
     </div>
 </nav>
+--}%
 
 
 
 <div class="container" id="wrap">
     <div class="row">
-        <div class="col-sm-6 col-sm-offset-3    ">
+        <div class="col-sm-6 col-sm-offset-3">
             <div class="panel panel-primary">
                 <div class="panel-heading">
                     <span class="glyphicon glyphicon-list"></span> Register Here
@@ -72,7 +74,7 @@
                     <div class="message" role="status" style="color:blue;">${flash.message}</div>
                 </g:if>
 
-                <input type="text" name="username" value="${userInstance?.username}" class="form-control input-md" placeholder="User Name"/></br>
+                <input type="text" name="username" required value="${userInstance?.username}" class="form-control input-md" placeholder="User Name"/></br>
                     <g:hasErrors bean="${userInstance}" field="username">
                         <p style="color: darkred;"><g:fieldError bean="${userInstance}" field="username"/></p>
                     </g:hasErrors>
@@ -106,17 +108,17 @@
                         <p style="color: darkred;"> <g:fieldError bean="${userInstance}" field="city"/></p>
                     </g:hasErrors>
 
-                <input type="email" name="email" value="${userInstance?.email}" class="form-control input-md" placeholder="Email"/></br>
+                <input type="email" name="email" required value="${userInstance?.email}" class="form-control input-md" placeholder="Email"/></br>
                  <g:hasErrors bean="${userInstance}" field="email">
                         <p style="color: darkred;"> <g:fieldError bean="${userInstance}" field="email"/></p>
                     </g:hasErrors>
 
-                <input type="password" name="password" value="${userInstance?.password}" class="form-control input-md" placeholder="Password"/></br>
+                <input type="password" name="password" required value="${userInstance?.password}" class="form-control input-md" placeholder="Password"/></br>
                  <g:hasErrors bean="${userInstance}" field="password">
                         <p style="color: darkred;"><g:fieldError bean="${userInstance}" field="password"/></p>
                     </g:hasErrors>
 
-                <input type="password" name="confirm_password" value="${userInstance?.confirm_password}" class="form-control input-md" placeholder="Confirm Password"/></br>
+                <input type="password" name="confirm_password" required value="${userInstance?.confirm_password}" class="form-control input-md" placeholder="Confirm Password"/></br>
                  <g:hasErrors bean="${userInstance}" field="confirm_password">
                         <p style="color: darkred;"> <g:fieldError bean="${userInstance}" field="confirm_password"/></p>
                     </g:hasErrors>

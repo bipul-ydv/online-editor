@@ -8,10 +8,10 @@ class UrlMappings {
                 // apply constraints here
             }
         }
-
-        "/"(view:"/login/auth")
-        "500"(view:'/error')
-        "404"(view:'/notFound')
+        "405"(view: '/405.gsp')
+        "/"(controller: 'notes',action: 'index')
+        "500"(view:'/500.gsp')
+        "404"(view: '/404.gsp')
         "/resetPassword/$uuid"(controller: 'user', action: 'changePassword')
         "/api/ajaxGetRegisteredUser" controller: "admin", action: "ajaxGetRegisteredUser"
     }
