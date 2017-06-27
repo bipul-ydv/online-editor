@@ -31,10 +31,10 @@
 					 alt="">
 				<form class="form-signin" action="${postUrl ?: '/login/authenticate'}" method="POST" id="loginForm" >
 					<g:if test='${flash.message}'>
-				    <div class="login_message">${flash.message}</div>
+						<div class="message" role="status" style="font-size: medium;color: red;">${flash.message}</div>
 			        </g:if>
 					<g:if test="${flash.error}">
-						${flash.error}
+						<div class="message_error" style="font-size: medium;color: red;">${flash.error}</div>
 			       </g:if>
 					<input type="text" class="form-control" placeholder="Username" id="username" name="${usernameParameter ?: 'username'}" required autofocus>
 					<br>

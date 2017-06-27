@@ -24,13 +24,13 @@
                      alt="">
                 <g:form class="form-signin" action="saveNewPassword">
                     <g:if test="${flash.message}">
-                        ${flash.message}
+                        <div class="message" role="status" style="font-size: medium;color: green;">${flash.message}</div>
                     </g:if>
                     <g:if test="${flash.error}">
-                        ${flash.error}
+                        <div class="message_error" style="font-size: medium;color: red;">${flash.error}</div>
                     </g:if>
                     <input type="hidden" value="${uuid}" name="uuid" />
-                    <input type="text" class="form-control" placeholder="Password" name = "password" required autofocus>
+                    <input type="password" class="form-control" placeholder="Password" name = "password" required autofocus>
                     <br>
                     <input type="password" class="form-control" placeholder="Confirm Password" name="confirmPassword" required>
                     <button class="btn btn-lg btn-primary btn-block" type="submit">

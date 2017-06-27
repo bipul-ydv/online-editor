@@ -4,13 +4,14 @@ import com.online.editor.auth.Content
 
 import com.online.editor.auth.User
 import grails.plugin.asyncmail.AsynchronousMailService
+import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugin.springsecurity.annotation.Secured
 import grails.web.mapping.LinkGenerator
 
 import static org.springframework.http.HttpStatus.*
 import grails.transaction.Transactional
 
-@Secured(['ROLE_USER','ROLE_ADMIN'])
+@Secured(['permitAll'])
 @Transactional(readOnly = true)
 class NotesController {
     AsynchronousMailService asynchronousMailService

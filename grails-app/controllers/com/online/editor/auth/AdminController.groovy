@@ -1,5 +1,6 @@
 package com.online.editor.auth
 
+import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.json.JsonBuilder
 
@@ -7,7 +8,10 @@ import groovy.json.JsonBuilder
 class AdminController {
     def utilityService
 
-    def home() { }
+    def signUpChart() {
+        render template: "signUpChart"
+        return
+    }
 
     def allUserInfo(){
         def users = User.getAll()
@@ -18,36 +22,37 @@ class AdminController {
         Date date = new Date()
         Integer totalUserSignupToday = User.createCriteria().count() {
             between("dateCreated", utilityService.getTodayStart(date), utilityService.getTodayEnd(date))
-
         }
-        def date1 = utilityService.getTodayStart(date)
-        def date2 = utilityService.getTodayEnd(date)
-        render "success"
-
-    }
-    def index(){
-        def users = User.getAll()
-        [users:users]
+        render(view:"../admin.Template/usersRegisteredToday", model: [totalUserSignupToday : totalUserSignupToday])
     }
 
     def switchUser(){
 
     }
-     def userSignUp(){
-         def users = User.findAll().sort{it.dateCreated};
-         Map<Date,Integer> result = users.collectEntries{
-             [it.dateCreated.getTime(),it.count]
-         }
-         return result
 
-     }
+    def home(){
+        def users = User.getAll()
+
+        [users:users]
+    }
+
     def ajaxGetRegisteredUser = {
 
-        def userData = userSignUp()
+        def results  = User.executeQuery("select dateCreated as date ,count(id) from User group by dateCreated")
+        List<ChartData> chartDataList = new ArrayList<>()
+        results.each { result->
+            Date date = result[0]
+            Integer count=result[1]
+            chartDataList.add(new ChartData(date: date.getTime(), count: count))
+        }
+
+        Map<Date,Integer> result = chartDataList.collectEntries{
+            [it.date,it.count]
+        }
         def json = new JsonBuilder()
 
         json(
-                userData.collect {
+                result.collect {
                     [
                             it.key,
                             it.value
@@ -55,6 +60,17 @@ class AdminController {
                 }
         )
 
-       render json.toPrettyString()
+        render json.toPrettyString()
     }
+
+    def browseUser(){
+
+    }
+
+
+    def searchUserDetails() {
+        User user = User.findByUsername(params.username)
+        [user:user]
+    }
+
 }

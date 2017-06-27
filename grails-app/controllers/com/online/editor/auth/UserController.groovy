@@ -42,8 +42,8 @@ class UserController {
         String email = params.email
         User user = User.findByEmail(email)
         if(!user){
-            flash.error = "Email Id Not Registered.Please Signup First"
-            redirect controller: 'login' , action: 'auth'
+            flash.warning = g.message(code: 'user.forgetPassword.incorrectEmail')
+            render(view: 'forgotPassword')
             return
         }
         String uuid = UUID.randomUUID().toString()
@@ -94,7 +94,7 @@ class UserController {
         }
 
         if (!params.password.toString().equals(params.confirmPassword)) {
-            flash.message = g.message(code: 'user.changePassword.mismatch.label')
+            flash.error = g.message(code: 'user.changePassword.mismatch.label')
             render(view: 'changePassword', model: [uuid: params.uuid])
             return
         }
