@@ -7,7 +7,7 @@
 
 
             rangeSelector: {
-                selected: 1
+                selected: 1 
             },
 
             title: {
